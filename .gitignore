@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*~
+.Rhistory
+R/.Rhistory
+config.log
+config.status
+doc
+Meta
+*.Rproj
