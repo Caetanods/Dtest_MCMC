@@ -1,8 +1,8 @@
-calcD <-
-function(t1, t2) {
+#' @importFrom phytools Map.Overlap
+calcD <- function(t1, t2) {
   ## This computes the quantities to get the D metric.
   ## Depends only on the realization of the stochastic map. Do not seems to depend on the model of evolution.
-	Do  <-  mapply(phytools::Map.Overlap,t1,t2,SIMPLIFY=FALSE)
+	Do  <-  mapply(Map.Overlap,t1,t2,SIMPLIFY=FALSE)
 	foo <- function(M){
 		m1 <- rowSums(M)
 		m2 <- colSums(M)

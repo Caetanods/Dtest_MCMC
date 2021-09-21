@@ -1,5 +1,5 @@
-fitDiscrete_return_lik <-
-function(phy, dat, k, model=c("ER","SYM","ARD","meristic"), ncores=1) {
+#' @importFrom geiger treedata
+fitDiscrete_return_lik <- function(phy, dat, k, model=c("ER","SYM","ARD","meristic"), ncores=1) {
     ## Function extracted from geiger. Returns only the likelihood for the model.
     td <- treedata(phy, dat)
     ## add check to make sure only unique data used

@@ -1,7 +1,7 @@
-mkn_lik_ext <-
-function(phy, dat, k, strict = FALSE, constrain=c("ER","SYM","ARD","meristic"), transform=c("none", "EB", "lambda", "kappa", "delta", "white"), ...){
+#' @importFrom geiger argn
+mkn_lik_ext <- function(phy, dat, k, strict = FALSE, constrain=c("ER","SYM","ARD","meristic"), transform=c("none", "EB", "lambda", "kappa", "delta", "white"), ...){
     ## Function extracted from geiger to allow for a non_strict model to run.
-    phy = reorder(phy, "postorder")
+    phy = reorder(x = phy, order = "postorder")
 
     # control object for make.mkn()
 	ct = list(method="exp")
