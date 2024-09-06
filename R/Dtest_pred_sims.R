@@ -137,16 +137,32 @@ Dtest_pred_sims <- function(t1, t2, tag = "test", dir_files, ngen = 5000, nsim =
         ## Sample Q matrices from the MCMC in order to make the stochastic maps.
         ss <- sample(x = seq(from = round(ngen/2), to = ngen, by = 1), size = nsim, replace = FALSE)
         dt_t1 <- mcmc_t1$batch[ss,]
-        ## Transform the sample in a list of Q matrices.
-        Q_mcmc_t1 <- list()
-        for( w in 1:nsim ){
-            ## Need to reconstruct using the model matrix.
-            mm <- model_mat1
-            for( j in 1:npar_t1 ) mm[model_mat1 == j] <- dt_t1[w,j]
-            diag( mm ) <- 0.0 ## Make sure the diag is 0!
-            diag( mm ) <- rowSums( mm ) * -1
-            rownames(mm) <- colnames(mm) <- 1:k_t1
-            Q_mcmc_t1[[w]] <- mm
+        ## If model is ER, then dt_t1 will be a vector and not a matrix:
+        if( is.vector(dt_t1) && is.atomic(dt_t1) ){
+            ## Transform the sample in a list of Q matrices.
+            Q_mcmc_t1 <- list()
+            for( w in 1:nsim ){
+                ## Need to reconstruct using the model matrix.
+                mm <- model_mat1
+                ## ER model only!
+                mm[which(model_mat1 == 1)] <- dt_t1[i]
+                diag( mm ) <- 0.0 ## Make sure the diag is 0!
+                diag( mm ) <- rowSums( mm ) * -1
+                rownames(mm) <- colnames(mm) <- 1:k_t1
+                Q_mcmc_t1[[w]] <- mm
+            }
+        } else{
+            ## Transform the sample in a list of Q matrices.
+            Q_mcmc_t1 <- list()
+            for( w in 1:nsim ){
+                ## Need to reconstruct using the model matrix.
+                mm <- model_mat1
+                for( j in 1:npar_t1 ) mm[model_mat1 == j] <- dt_t1[w,j]
+                diag( mm ) <- 0.0 ## Make sure the diag is 0!
+                diag( mm ) <- rowSums( mm ) * -1
+                rownames(mm) <- colnames(mm) <- 1:k_t1
+                Q_mcmc_t1[[w]] <- mm
+            }
         }
 
         ## Define a recursive function to run the stochastic maps. If fastSimmap runs into the limit, then ti will return NA.
@@ -212,18 +228,33 @@ Dtest_pred_sims <- function(t1, t2, tag = "test", dir_files, ngen = 5000, nsim =
 
         ss <- sample(x = seq(from = round(ngen/2), to = ngen, by = 1), size = nsim, replace = FALSE)
         dt_t2 <- mcmc_t2$batch[ss,]
-        ## Transform the sample in a list of Q matrices.
-        Q_mcmc_t2 <- list()
-        for( w in 1:nsim ){
-            ## Need to reconstruct using the model matrix.
-            mm <- model_mat2
-            for( j in 1:npar_t2 ) mm[model_mat2 == j] <- dt_t2[w,j]
-            diag( mm ) <- 0.0 ## Make sure the diag is 0!
-            diag( mm ) <- rowSums( mm ) * -1
-            rownames(mm) <- colnames(mm) <- 1:k_t2
-            Q_mcmc_t2[[w]] <- mm
+        ## If model is ER, then dt_t2 will be a vector and not a matrix:
+        if( is.vector(dt_t2) && is.atomic(dt_t2) ){
+            ## Transform the sample in a list of Q matrices.
+            Q_mcmc_t2 <- list()
+            for( w in 1:nsim ){
+                ## Need to reconstruct using the model matrix.
+                mm <- model_mat2
+                ## ER model only!
+                mm[which(model_mat2 == 1)] <- dt_t2[i]
+                diag( mm ) <- 0.0 ## Make sure the diag is 0!
+                diag( mm ) <- rowSums( mm ) * -1
+                rownames(mm) <- colnames(mm) <- 1:k_t2
+                Q_mcmc_t2[[w]] <- mm
+            }
+        } else{
+            ## Transform the sample in a list of Q matrices.
+            Q_mcmc_t2 <- list()
+            for( w in 1:nsim ){
+                ## Need to reconstruct using the model matrix.
+                mm <- model_mat2
+                for( j in 1:npar_t2 ) mm[model_mat2 == j] <- dt_t2[w,j]
+                diag( mm ) <- 0.0 ## Make sure the diag is 0!
+                diag( mm ) <- rowSums( mm ) * -1
+                rownames(mm) <- colnames(mm) <- 1:k_t2
+                Q_mcmc_t2[[w]] <- mm
+            }
         }
-
 
         ## Make the stochastic maps and save the rds file.
         run_fast_simmap_t2 <- function(q_mat, limit_shifts = 200){
